@@ -63,11 +63,15 @@ class TaskService {
   }
 
   // Buscar tarefas por título
-  async search(titulo, userId) {
-    return Task.find({
-      usuario: userId,
-      titulo: { $regex: titulo, $options: 'i' }
-    });
+  async search(q, userId) {
+
+    const filtro = { usuario: userId };
+
+    if (typeof q === 'string' && q.trim() !== '') {
+      filtro.titulo = { $regex: q.trim(), $options: 'i' };
+    }
+
+    return Task.find(filtro).sort({ createdAt: -1 });
   }
 
   // Estatísticas

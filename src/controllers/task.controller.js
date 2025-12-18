@@ -4,6 +4,7 @@ class TaskController {
 
   // GET /tasks
   async list(req, res) {
+    console.log(req.body);
     try {
       const tasks = await TaskService.list(req.userId);
       return res.json(tasks);
@@ -67,13 +68,16 @@ class TaskController {
   // GET /tasks/search
   async search(req, res) {
     try {
-      const { titulo } = req.query;
+      const userId = req.userId;     
+      const { q } = req.query;       
 
-      const tasks = await TaskService.search(titulo, req.userId);
+      const tasks = await TaskService.search(q, userId);
       return res.json(tasks);
 
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({
+        error: error.message
+      });
     }
   }
 
